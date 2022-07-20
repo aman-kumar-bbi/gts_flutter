@@ -59,39 +59,14 @@ typeMap = {for (var item in checkBoxList) '$item' : false};
                   Padding(
                     padding:
                         const EdgeInsets.only(right: 8, top: 10, left: 8.0),
-                    // child: categories(),
+                    child: categories(),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 30, left: 30.0),
-                    // child: subCategories(),
                     child: Container(
                         width: double.infinity,
                         height: 500,
-                        child: ListView.builder(
-                            itemCount: typeMap.length,
-                            itemBuilder: (context, index) {
-                              // String valuetoShow= CheckBoxMap.keys.elementAt(index);
-                              return CheckboxListTile(
-                                  title: Text(
-                                    typeMap.keys.elementAt(index),
-                                    style: TextStyle(color: Colors.grey[600]),
-                                  ),
-                                  value: typeMap.values.elementAt(index),
-                                  onChanged: (boolValue) {
-                                    setState(() {
-                                      typeMap.update(typeMap.keys.elementAt(index), (value) => boolValue!);
-
-                                      print("typeMap after ${typeMap.values.elementAt(index)==true}");
-                                      if (typeMap.values.elementAt(index)==true) {
-                                        print("true keys ${typeMap.keys.elementAt(index)}");
-                                        List onlyTrueValue=[];
-                                        
-                                        onlyTrueValue.add(typeMap.keys.elementAt(index));
-                                        print("onlyTrueValue $onlyTrueValue");
-                                      }
-                                    });
-                                  });
-                            })
+                        child: subCategories(),
                             ),
                   ),
                  
@@ -153,22 +128,68 @@ typeMap = {for (var item in checkBoxList) '$item' : false};
         ),
         value: isCategories,
         onChanged: (value) {
-          // setState(() {
-          //   isCategories = value!;
-          //   if (isCategories == true) {
-          //     setState(() {
-          //       isImages = true;
-          //       isTables = true;
-          //       isTools = true;
-          //     });
-          //   } else {
-          //     isImages = false;
-          //     isTables = false;
-          //     isTools = false;
-          //   }
-          // });
+          setState(() {
+              typeMap.updateAll((key, value) => true);
+               isCategories=value!;
+               
+               if(isCategories==false){
+                typeMap.updateAll((key, value) => false);
+               }
+               print("categories typeMap$typeMap");
+          });
+       
         });
   }
 
-  
+  Widget subCategories(){
+    return ListView.builder(
+                            itemCount: typeMap.length,
+                            itemBuilder: (context, index) {
+                              // String valuetoShow= CheckBoxMap.keys.elementAt(index);
+                              return CheckboxListTile(
+                                  title: Text(
+                                    typeMap.keys.elementAt(index),
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
+                                  value: typeMap.values.elementAt(index),
+                                  onChanged: (boolValue) {
+                                    setState(() {
+                                      typeMap.update(typeMap.keys.elementAt(index), (value) => boolValue!);
+
+                                     
+                                      // if (typeMap.values.elementAt(index)==true) {
+                                        
+                                      //   List onlyTrueValue=[];
+                                        
+                                      //   onlyTrueValue.add(typeMap.keys.elementAt(index));
+                                      //   print("onlyTrueValue $onlyTrueValue");
+                                      // }
+
+
+                                      // typeMap.forEach((key, value) {
+                                      //   print("for each $value");
+                                      // });
+                                          int count=0;
+                                      for (var i = 0; i < typeMap.length; i++) {
+                                        if (typeMap.values.elementAt(i)==true) {
+                                          count++;
+                                           
+                                          if (count==typeMap.length) {
+                                            setState(() {
+                                              isCategories=true;
+                                              
+                                            });
+                                          }else{
+                                            setState(() {
+                                              isCategories=false;
+                                            });
+                                          }
+                                           continue;
+                                        }
+                                      }
+                                      print("forloop ${typeMap.values.elementAt(index)}");
+                                    });
+                                  });
+                            });
+  }
 }

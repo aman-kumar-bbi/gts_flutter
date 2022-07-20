@@ -22,17 +22,13 @@ class MyApp extends StatefulWidget {
 }
 class _MyAppState extends State<MyApp> {
 
-  late Box box;
-  var data;
-  var myMap;
-  List dataOfList = [];
 
   @override
   Widget build(BuildContext context) {
     LocalStorage().readJson();
     LocalStorage().openBox();
     LocalStorage().getAllData();
-    print("dataofList $dataOfList");
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Theme.of(context).copyWith(
@@ -41,7 +37,7 @@ class _MyAppState extends State<MyApp> {
             ),
       ),
       title: "DataBase Filter",
-      home:home(ListOfData: dataOfList)
+      home:home()
     );
   }
   

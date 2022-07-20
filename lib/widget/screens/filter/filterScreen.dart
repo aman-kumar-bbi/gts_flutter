@@ -1,8 +1,8 @@
 import 'package:database_json/constant.dart';
-import 'package:database_json/models/models.dart';
-import 'package:database_json/widget/screens/ifJsonHaveData.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../models/checkBoxModels.dart';
 
 class filterScreen extends StatefulWidget {
   // const filterScreen({Key? key}) : super(key: key);
@@ -17,12 +17,37 @@ bool isCategories = false;
 bool isTables = false;
 bool isTools = false;
 bool isImages = false;
+ bool _checkbox=false;
 
 class _filterScreenState extends State<filterScreen> {
+  List checkBoxList = [];
+ 
+    Map <String,bool>typeMap={};
   
+    filteringDataInList() {
+    for (var i = 0; i < widget.wholeListFromJson.length; i++) {
+      for (var p = 0; p < widget.wholeListFromJson[i]["type"].length; p++) {
+        checkBoxList.add(widget.wholeListFromJson[i]["type"][p]);
+      }
+    }
+    checkBoxList=checkBoxList.toSet().toList();
+    // var debude=json.decode(checkBoxList).toString();
+    print("checkBoxList $checkBoxList");
+
+typeMap = {for (var item in checkBoxList) '$item' : false};
+    print("checkBoxList420 $typeMap");
+  }
+
+  @override
+  void initState() {
+        filteringDataInList();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("test ${widget.wholeListFromJson[21]["type"]}");
+    // print("typemap ${typeMap["content"]}");
     return Scaffold(
         appBar: Constant().customAppBar("Filter", false, null),
         body: Container(
@@ -34,12 +59,42 @@ class _filterScreenState extends State<filterScreen> {
                   Padding(
                     padding:
                         const EdgeInsets.only(right: 8, top: 10, left: 8.0),
-                    child: categories(),
+                    // child: categories(),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 30, left: 30.0),
-                    child: subCategories(),
+                    // child: subCategories(),
+                    child: Container(
+                        width: double.infinity,
+                        height: 500,
+                        child: ListView.builder(
+                            itemCount: typeMap.length,
+                            itemBuilder: (context, index) {
+                              // String valuetoShow= CheckBoxMap.keys.elementAt(index);
+                              return CheckboxListTile(
+                                  title: Text(
+                                    typeMap.keys.elementAt(index),
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
+                                  value: typeMap.values.elementAt(index),
+                                  onChanged: (boolValue) {
+                                    setState(() {
+                                      typeMap.update(typeMap.keys.elementAt(index), (value) => boolValue!);
+
+                                      print("typeMap after ${typeMap.values.elementAt(index)==true}");
+                                      if (typeMap.values.elementAt(index)==true) {
+                                        print("true keys ${typeMap.keys.elementAt(index)}");
+                                        List onlyTrueValue=[];
+                                        
+                                        onlyTrueValue.add(typeMap.keys.elementAt(index));
+                                        print("onlyTrueValue $onlyTrueValue");
+                                      }
+                                    });
+                                  });
+                            })
+                            ),
                   ),
+                 
                 ],
               ),
               Container(
@@ -75,11 +130,7 @@ class _filterScreenState extends State<filterScreen> {
                               primary: Colors.purpleAccent,
                               backgroundColor: Colors.blue[900],
                             ),
-                            onPressed: () {
-                              ApplyButtonFunction();
-                              print("ApplyButtonFunction ${ApplyButtonFunction}");
-                              Get.to(IfJsonHaveData(DataAfterFutureVuilder: ApplyButtonFunction()));
-                            },
+                            onPressed: () {},
                             child: const Text(
                               "Apply",
                               style: TextStyle(color: Colors.white),
@@ -102,155 +153,22 @@ class _filterScreenState extends State<filterScreen> {
         ),
         value: isCategories,
         onChanged: (value) {
-          setState(() {
-            isCategories = value!;
-            if (isCategories == true) {
-              setState(() {
-                isImages = true;
-                isTables = true;
-                isTools = true;
-              });
-            } else {
-              isImages = false;
-              isTables = false;
-              isTools = false;
-            }
-          });
+          // setState(() {
+          //   isCategories = value!;
+          //   if (isCategories == true) {
+          //     setState(() {
+          //       isImages = true;
+          //       isTables = true;
+          //       isTools = true;
+          //     });
+          //   } else {
+          //     isImages = false;
+          //     isTables = false;
+          //     isTools = false;
+          //   }
+          // });
         });
   }
 
-  Widget subCategories() {
-    return Column(
-      children: [
-        CheckboxListTile(
-            title: Text(
-              "Tables",
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            value: isTables,
-            onChanged: (value) {
-              setState(() {
-                isTables = value!;
-                checkCatergories();
-              });
-            }),
-        CheckboxListTile(
-            title: Text(
-              "Tools",
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            value: isTools,
-            onChanged: (value) {
-              setState(() {
-                isTools = value!;
-                checkCatergories();
-              });
-            }),
-        CheckboxListTile(
-            title: Text(
-              "Images",
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            value: isImages,
-            onChanged: (value) {
-              setState(() {
-                isImages = value!;
-                checkCatergories();
-              });
-            }),
-      ],
-    );
-  }
-
-  checkCatergories() {
-    if (isTables == true && isTools == true && isImages == true) {
-      setState(() {
-        isCategories = true;
-      });
-    } else {
-      setState(() {
-        isCategories = false;
-      });
-    }
-  }
-
-  List<dynamic> ApplyButtonFunction() {
-    if (isTables == true &&
-        isImages == false &&
-        isTools == false &&
-        isCategories == false) {
-      var outputList = widget.wholeListFromJson
-          .where((o) => o["type"].toString() == "[table]")
-          .toList();
-          print("output table $outputList");
-      return outputList;
-    } else if (isTables == false &&
-        isImages == true &&
-        isTools == false &&
-        isCategories == false) {
-      var outputList = widget.wholeListFromJson
-          .where((o) => o["type"].toString() == "[image]")
-          .toList();
-           print("outPut $outputList");
-      return outputList;
-    } else if (isTables == false &&
-        isImages == false &&
-        isTools == true &&
-        isCategories == false) {
-      var outputList = widget.wholeListFromJson
-          .where((o) => o["type"].toString() == "[content]")
-          .toList();
-          print("outPut $outputList");
-      return outputList;
-    } else if (isTables == false &&
-        isImages == true &&
-        isTools == true &&
-        isCategories == false) {
-      var outputList = widget.wholeListFromJson
-          .where((o) => o["type"].toString() == "[content, image]")
-          .toList();
-          print("output images and tools $outputList");
-      return outputList;
-    } else if (isTables == true &&
-        isImages == false &&
-        isTools == true &&
-        isCategories == false) {
-      var outputList = widget.wholeListFromJson
-          .where((o) => o["type"].toString() == "[content, table]")
-          .toList();
-          print("outPut $outputList");
-      return outputList;
-    } else if (isTables == false &&
-        isImages == true &&
-        isTools == true &&
-        isCategories == false) {
-      var outputList = widget.wholeListFromJson
-          .where((o) => o["type"].toString() == "[content,image]")
-          .toList();
-          print("output image tools $outputList");
-      return outputList;
-    } else if (isTables == false &&
-        isImages == true &&
-        isTools == true &&
-        isCategories == false) {
-      var outputList = widget.wholeListFromJson
-          .where((o) => o["type"].toString() == "[image, table]")
-          .toList();
-          print("output image table $outputList");
-      return outputList;
-    } 
-    else if (isTables == true &&
-        isImages == true &&
-        isTools == true &&
-        isCategories == true) {
-      var outputList = widget.wholeListFromJson
-          .where((o) => o["type"].toString() == "[content, image, table]".toString())
-          .toList();
-          print("output image tools table $outputList");
-      return outputList;
-    }
-    else {
-      return widget.wholeListFromJson;
-    }
-  }
+  
 }

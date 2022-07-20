@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:database_json/models/checkBoxModels.dart';
 import 'package:flutter/material.dart';
 
 import '../../constant.dart';
@@ -9,10 +12,22 @@ class IfJsonHaveData extends StatelessWidget {
   IfJsonHaveData({required this.DataAfterFutureVuilder});
   TextEditingController searchFeildController = TextEditingController();
 
+//   filteringDataForCheckBox(){
+// List checkBoxList=[];
+//     for (var i = 0; i < DataAfterFutureVuilder[1]["type"].length; i++) {
+//     checkBoxList.add("${DataAfterFutureVuilder[1]["type"][i]}");
+
+//     CheckBoxState(title:checkBoxList[i] );
+//     }
+//     // var debude=json.decode(checkBoxList).toString();
+//     print("checkBoxList ${checkBoxList}");
+    
+//   }
+
   @override
   Widget build(BuildContext context) {
-    print("dataAfterFutureBuilder ${DataAfterFutureVuilder}");
-
+    // filteringDataForCheckBox();
+    print("DataAfterFutureVuilder ${DataAfterFutureVuilder[1]["type"].length}");
     return Scaffold(
       appBar: Constant().customAppBar("Search", true,DataAfterFutureVuilder),
       body: SingleChildScrollView(
@@ -25,7 +40,7 @@ class IfJsonHaveData extends StatelessWidget {
                         child: Row(
                           children: [
                             SearchBar(
-                                searchFeildController: searchFeildController),
+                                searchFeildController: searchFeildController,wholeListFromJson: DataAfterFutureVuilder  as List<dynamic>,),
                             customButton(
                               searchFeildController: searchFeildController,
                             ),

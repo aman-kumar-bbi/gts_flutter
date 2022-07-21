@@ -1,8 +1,10 @@
 import 'package:database_json/constant.dart';
+import 'package:database_json/widget/screens/ifJsonHaveData.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 
-import '../../../models/checkBoxModels.dart';
+
 
 class filterScreen extends StatefulWidget {
   // const filterScreen({Key? key}) : super(key: key);
@@ -17,39 +19,38 @@ bool isCategories = false;
 bool isTables = false;
 bool isTools = false;
 bool isImages = false;
- bool _checkbox=false;
 
 class _filterScreenState extends State<filterScreen> {
   List checkBoxList = [];
- 
-    Map <String,bool>typeMap={};
-  
-    filteringDataInList() {
+  List testItem = [];
+  Map<String, bool> typeMap = {};
+
+  Map<String, dynamic> filteringDataInList() {
     for (var i = 0; i < widget.wholeListFromJson.length; i++) {
       for (var p = 0; p < widget.wholeListFromJson[i]["type"].length; p++) {
         checkBoxList.add(widget.wholeListFromJson[i]["type"][p]);
       }
     }
-    checkBoxList=checkBoxList.toSet().toList();
-    // var debude=json.decode(checkBoxList).toString();
-    print("checkBoxList $checkBoxList");
+    checkBoxList = checkBoxList.toSet().toList();
 
-typeMap = {for (var item in checkBoxList) '$item' : false};
-    print("checkBoxList420 $typeMap");
+    typeMap = {for (var item in checkBoxList) '$item': false};
+    return typeMap;
   }
 
   @override
   void initState() {
-        filteringDataInList();
+    filteringDataInList();
     // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // print("typemap ${typeMap["content"]}");
+    List list1=[];
+
     return Scaffold(
         appBar: Constant().customAppBar("Filter", false, null),
+
         body: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,12 +65,11 @@ typeMap = {for (var item in checkBoxList) '$item' : false};
                   Padding(
                     padding: const EdgeInsets.only(right: 30, left: 30.0),
                     child: Container(
-                        width: double.infinity,
-                        height: 500,
-                        child: subCategories(),
-                            ),
+                      width: double.infinity,
+                      height: 500,
+                      child: subCategories(),
+                    ),
                   ),
-                 
                 ],
               ),
               Container(
@@ -105,7 +105,28 @@ typeMap = {for (var item in checkBoxList) '$item' : false};
                               primary: Colors.purpleAccent,
                               backgroundColor: Colors.blue[900],
                             ),
-                            onPressed: () {},
+                            onPressed: () { 
+                              testing();
+
+                                 list1 = testItem.toSet().toList();
+                              for (var i = 0;
+                                  i < widget.wholeListFromJson.length;
+                                  i++) {
+                                var list2 = widget.wholeListFromJson[i]["type"];
+                                var finalData =
+                                    (listEquals(list1, list2) == true);
+
+                              }
+                              var outputList = widget.wholeListFromJson
+                                  .where(
+                                      (o) => o["type"].toString() == "${list1}")
+                                  .toList();
+                                  Get.to(IfJsonHaveData(DataAfterFutureVuilder: outputList));
+
+                                  setState(() {
+                                    testItem=[];
+                                  });
+                            },
                             child: const Text(
                               "Apply",
                               style: TextStyle(color: Colors.white),
@@ -122,74 +143,65 @@ typeMap = {for (var item in checkBoxList) '$item' : false};
 
   Widget categories() {
     return CheckboxListTile(
-        title: Text(
+        title: const Text(
           "Categories",
           style: TextStyle(color: Colors.black),
         ),
         value: isCategories,
         onChanged: (value) {
           setState(() {
-              typeMap.updateAll((key, value) => true);
-               isCategories=value!;
-               
-               if(isCategories==false){
-                typeMap.updateAll((key, value) => false);
-               }
-               print("categories typeMap$typeMap");
+            typeMap.updateAll((key, value) => true);
+            isCategories = value!;
+
+            if (isCategories == false) {
+              typeMap.updateAll((key, value) => false);
+            }
           });
-       
         });
   }
 
-  Widget subCategories(){
+  Widget subCategories() {
     return ListView.builder(
-                            itemCount: typeMap.length,
-                            itemBuilder: (context, index) {
-                              // String valuetoShow= CheckBoxMap.keys.elementAt(index);
-                              return CheckboxListTile(
-                                  title: Text(
-                                    typeMap.keys.elementAt(index),
-                                    style: TextStyle(color: Colors.grey[600]),
-                                  ),
-                                  value: typeMap.values.elementAt(index),
-                                  onChanged: (boolValue) {
-                                    setState(() {
-                                      typeMap.update(typeMap.keys.elementAt(index), (value) => boolValue!);
+        itemCount: typeMap.length,
+        itemBuilder: (context, index) {
+          return CheckboxListTile(
+              title: Text(
+                typeMap.keys.elementAt(index),
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+              value: typeMap.values.elementAt(index),
+              onChanged: (boolValue) {
+                setState(() {
+                  typeMap.update(
+                      typeMap.keys.elementAt(index), (value) => boolValue!);
+                  int count = 0;
+                  for (var i = 0; i < typeMap.length; i++) {
+                    if (typeMap.values.elementAt(i) == true) {
+                      count++;
 
-                                     
-                                      // if (typeMap.values.elementAt(index)==true) {
-                                        
-                                      //   List onlyTrueValue=[];
-                                        
-                                      //   onlyTrueValue.add(typeMap.keys.elementAt(index));
-                                      //   print("onlyTrueValue $onlyTrueValue");
-                                      // }
+                      if (count == typeMap.length) {
+                        setState(() {
+                          isCategories = true;
+                        });
+                      } else {
+                        setState(() {
+                          isCategories = false;
+                        });
+                      }
+                      continue;
+                    }
+                  }
+                });
+              });
+        });
+  }
 
-
-                                      // typeMap.forEach((key, value) {
-                                      //   print("for each $value");
-                                      // });
-                                          int count=0;
-                                      for (var i = 0; i < typeMap.length; i++) {
-                                        if (typeMap.values.elementAt(i)==true) {
-                                          count++;
-                                           
-                                          if (count==typeMap.length) {
-                                            setState(() {
-                                              isCategories=true;
-                                              
-                                            });
-                                          }else{
-                                            setState(() {
-                                              isCategories=false;
-                                            });
-                                          }
-                                           continue;
-                                        }
-                                      }
-                                      print("forloop ${typeMap.values.elementAt(index)}");
-                                    });
-                                  });
-                            });
+  testing() {
+    for (var i = 0; i < typeMap.length; i++) {
+      if (typeMap.values.elementAt(i) == true) {
+        testItem.addAll({typeMap.keys.elementAt(i)});
+        
+      }
+    }
   }
 }

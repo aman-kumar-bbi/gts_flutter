@@ -12,8 +12,6 @@ class LocalStorage {
     readJson() async {
     final String response = await rootBundle.loadString('assets/gts.json');
     data = await json.decode(response);
-     print("DatafromJson $data");
-
      return data;
    }
 

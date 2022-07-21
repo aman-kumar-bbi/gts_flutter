@@ -1,10 +1,15 @@
+import 'package:database_json/widget/screens/ifJsonHaveData.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SearchBar extends StatefulWidget {
   final searchFeildController;
-  var wholeListFromJson;
+  final List<dynamic> wholeListFromJson;
   SearchBar(
-      {Key? key, required this.searchFeildController, required this.wholeListFromJson}) : super(key: key);
+      {Key? key,
+      required this.searchFeildController,
+      required this.wholeListFromJson})
+      : super(key: key);
 
   @override
   State<SearchBar> createState() => _SearchBarState();
@@ -12,13 +17,20 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   @override
-  List ListForSearch=[];
-  List listAfterFiltertheData=[];
+  Map<String, dynamic> ListForSearch = {};
+  List idList =[];
+   List testingList =[];
+  List listAfterFiltertheData = [];
   Widget build(BuildContext context) {
-    ListForSearch=widget.wholeListFromJson;
+    // ListForSearch = widget.wholeListFromJson[0];
+    // List idList =
+    //   widget.wholeListFromJson.where((element) => element['chapterName']==).toList();
+//  widget.wholeListFromJson.where((element) => element['chapterName']=="Practical tips for safe and effective lead implantation").toList();
 
-filterListForSearch();
-print("filterListForSearch ${filterListForSearch()}");
+    // print("aman $idList");
+
+
+    print("ListForSearch $testingList");
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, bottom: 8),
       child: Container(
@@ -38,11 +50,19 @@ print("filterListForSearch ${filterListForSearch()}");
               Container(
                 width: 200,
                 child: TextFormField(
-                  onFieldSubmitted: (value) =>searchFunction(value.toString()),
-                  controller: widget.searchFeildController,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none, )
-                ),
+                    // onFieldSubmitted: (value) {
+                    //   Get.to(IfJsonHaveData(DataAfterFutureVuilder: idList));
+                    // },
+                       
+                    onChanged: (value){
+                      searchFunction(value);
+                      // Get.to(IfJsonHaveData(DataAfterFutureVuilder: idList));
+                    },
+                    onFieldSubmitted: (value){Get.to(IfJsonHaveData(DataAfterFutureVuilder: idList));},
+                    controller: widget.searchFeildController,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                    )),
               ),
               Container(
                 width: 50,
@@ -60,8 +80,6 @@ print("filterListForSearch ${filterListForSearch()}");
     );
   }
 
- 
-
   // searchFunction(String searchText ) {
   //   var outputList = widget.wholeListFromJson
   //       .where((o) => o["text"] == searchText)
@@ -72,33 +90,26 @@ print("filterListForSearch ${filterListForSearch()}");
   //       print("searchtesting $outputList");
   // }
 
+  searchFunction(String searchText) {
+ idList =
+      widget.wholeListFromJson.where((element) => element['chapterName']==searchText).toList();
 
-  searchFunction(String searchText ) {
-    var outputList = listAfterFiltertheData.forEach((element) =>print(" finallist ${element==searchText}"));
-        
-        
+
+  }
+
+  filterListForSearch() {
+    for (var i = 0; i < ListForSearch.length; i++) {
+      // ListForSearch[i].forEach((element) {listAfterFiltertheData.add(element["chapterName"]=="Anchor knot for securing the lead"); });
+    }
+
+    if (listAfterFiltertheData == true) {
+      print("trueData $listAfterFiltertheData");
+    }
+    return ListForSearch.forEach((k, v) => ListForSearch);
   }
 
 
-   filterListForSearch(){
-    
-     ListForSearch.forEach((element) {listAfterFiltertheData.add(element["chapterName"]); });
-    print("listAfterFiltertheData $listAfterFiltertheData");
-  }
-
-      Widget dataList(List DataList) {
-    return Container(
-        height: 640,
-        width: double.infinity,
-        child: ListView.builder(
-          itemCount: DataList.length,
-          itemBuilder: ((context, index) {
-            return ListTile(
-              title: Text("${DataList[index]['chapterName']}",maxLines: 2,overflow: TextOverflow.ellipsis,),
-              subtitle: Text("${DataList[index]['page']}",maxLines: 1,overflow: TextOverflow.ellipsis),
-            );
-          }),
-        ));
-  }
 
 }
+        // widget.wholeListFromJson.map((e) => {e['chapterName']=="Categories of consensus statements"}).toList();
+// (e) => {e['chapterName']=="Categories of consensus statements"}

@@ -1,4 +1,4 @@
-import 'package:database_json/constant.dart';
+import 'package:database_json/widget/constant.dart';
 import 'package:database_json/widget/screens/ifJsonHaveData.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -121,7 +121,7 @@ class _filterScreenState extends State<filterScreen> {
                                   .where(
                                       (o) => o["type"].toString() == "${list1}")
                                   .toList();
-                                  Get.to(IfJsonHaveData(DataAfterFutureVuilder: outputList));
+                                  Get.to(IfJsonHaveData(DataAfterFutureBuilder: outputList));
 
                                   setState(() {
                                     testItem=[];

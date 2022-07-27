@@ -1,10 +1,12 @@
+import 'package:database_json/widget/searchBar.dart';
 import 'package:flutter/material.dart';
 
 class customButton extends StatelessWidget {
  
   final searchFeildController;
-  
-  const customButton({required this.searchFeildController});
+    final List<dynamic> wholeListFromJson;
+
+  const customButton({required this.searchFeildController,required this.wholeListFromJson});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +17,7 @@ class customButton extends StatelessWidget {
           width: 60,
           child: TextButton(
               onPressed: () {
+                 Stream<dynamic>?  myStream=cancelbroadcastList();
                 FocusScope.of(context).requestFocus(new FocusNode());
                 searchFeildController.clear();
               },
@@ -26,4 +29,8 @@ class customButton extends StatelessWidget {
   
 
   }
+   cancelbroadcastList(){
+    return myStreamController.sink.add(wholeListFromJson);
+  }
+
 }

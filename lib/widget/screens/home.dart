@@ -1,11 +1,8 @@
-import 'package:database_json/localStorage.dart';
+import 'package:database_json/Database/localStorage.dart';
 import 'package:database_json/widget/screens/ifJsonHaveData.dart';
 import 'package:flutter/material.dart';
 
 class home extends StatefulWidget {
-  // List ListOfData;
-  // home({required this.ListOfData});
-
   @override
   State<home> createState() => _homeState();
 }
@@ -15,29 +12,23 @@ class _homeState extends State<home> {
   bool isLoader = true;
   TextEditingController searchFeildController = TextEditingController();
 
-  // late var item = widget.ListOfData;
-  // late List<dynamic> filterhouse = item;
-
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
         body: FutureBuilder(
-          future: LocalStorage().readJson(),
+          future: LocalStorage().passDataForUI(LocalStorage().readJson()),
           builder: (context, snapshot) {
             var dataFromFilter=snapshot.data;
 
             if (snapshot.connectionState == ConnectionState.done) {
               
 
-              return IfJsonHaveData(DataAfterFutureVuilder: snapshot.data as List<dynamic>);
+              return IfJsonHaveData(DataAfterFutureBuilder: snapshot.data as List<dynamic>);
 
             } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                  child: Container(
-                      height: 50,
-                      width: 50,
-                      child: const CircularProgressIndicator()));
+              return const Center(
+                  child: CircularProgressIndicator());
             } else {
               return const Center(
                 child: Text("Something went wrong"),

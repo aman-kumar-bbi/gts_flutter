@@ -1,11 +1,15 @@
+// To parse this JSON data, do
+//
+//     final mainData = mainDataFromJson(jsonString);
+
 import 'dart:convert';
 
-List<Models> modelsFromJson(String str) => List<Models>.from(json.decode(str).map((x) => Models.fromJson(x)));
+List<MainData> mainDataFromJson(String str) => List<MainData>.from(json.decode(str).map((x) => MainData.fromJson(x)));
 
-String modelsToJson(List<Models> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String mainDataToJson(List<MainData> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class Models {
-    Models({
+class MainData {
+    MainData({
         this.page,
         this.text,
         this.chapterName,
@@ -17,7 +21,7 @@ class Models {
     String? chapterName;
     List<Type>? type;
 
-    factory Models.fromJson(Map<String, dynamic> json) => Models(
+    factory MainData.fromJson(Map<String, dynamic> json) => MainData(
         page: json["page"],
         text: json["text"],
         chapterName: json["chapterName"],

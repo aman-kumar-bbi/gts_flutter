@@ -22,10 +22,7 @@ class _homeState extends State<home> {
             var dataFromFilter=snapshot.data;
 
             if (snapshot.connectionState == ConnectionState.done) {
-              
-
               return IfJsonHaveData(DataAfterFutureBuilder: snapshot.data as List<dynamic>);
-
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                   child: CircularProgressIndicator());

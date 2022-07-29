@@ -57,7 +57,7 @@ class _SearchBarState extends State<SearchBar> {
                      cursorColor: Colors.black,
     
                       onChanged: (value) {
-                        // setstate
+                       
                         setState(() {
                           
                         staticValue.searchedList = Provider.of<searchList>(context, listen: false).searchFunction(value,idList,widget.wholeListFromJson);
@@ -68,7 +68,7 @@ class _SearchBarState extends State<SearchBar> {
                       
                       controller: widget.searchFeildController,
                       decoration: const InputDecoration(
-                        fillColor: Colors.amber,
+                        
                         border: InputBorder.none,
                       )),
                 ),

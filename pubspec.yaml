@@ -41,6 +41,8 @@ dependencies:
   path_provider: ^2.0.11
   http: ^0.13.4
   intl: ^0.17.0
+  focused_menu: ^1.0.5
+  share_plus: ^4.0.10
 
 
 dev_dependencies:

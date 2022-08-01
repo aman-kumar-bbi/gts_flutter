@@ -10,6 +10,18 @@ class LocalStorage {
   
   late Box box;
   late List   data;
+
+  onlyReadJson()async{
+    final String response = await rootBundle.loadString('assets/gts.json');
+    
+    var amandata = await json.decode(response);
+
+  
+    return amandata;
+  }
+    
+
+
     readJson() async {
     final String response = await rootBundle.loadString('assets/gts.json');
     

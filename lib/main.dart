@@ -1,9 +1,12 @@
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:database_json/Database/localStorage.dart';
+import 'package:database_json/apiService.dart/getApi.dart';
 import 'package:database_json/providers/SearchListProvider.dart';
 import 'package:database_json/widget/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -11,9 +14,9 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
   Directory directory = await getApplicationDocumentsDirectory();
-  await Hive.initFlutter();
+  await Hive.initFlutter(directory.path);
+  await Hive.openBox('dataFromJson');
   MultiProvider(providers: [
     ChangeNotifierProvider(create: (_)=>searchList())
   ]);
@@ -26,10 +29,12 @@ class MyApp extends StatefulWidget {
 }
 class _MyAppState extends State<MyApp> {
 
+//  List data=[];
 
   @override
   Widget build(BuildContext context) {
-    LocalStorage().readJson();
+
+
     return ChangeNotifierProvider(
       create: (context) => searchList(),
       child: GetMaterialApp(
@@ -44,5 +49,5 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
-  
+    
 }

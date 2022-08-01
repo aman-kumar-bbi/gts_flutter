@@ -1,12 +1,12 @@
 // To parse this JSON data, do
 //
-//     final mainData = mainDataFromJson(jsonString);
+//     final mainData = MainDataFromJson(jsonString);
 
 import 'dart:convert';
 
-List<MainData> mainDataFromJson(String str) => List<MainData>.from(json.decode(str).map((x) => MainData.fromJson(x)));
+List<MainData> MainDataFromJson(String str) => List<MainData>.from(json.decode(str).map((x) => MainData.fromJson(x)));
 
-String mainDataToJson(List<MainData> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String MainDataToJson(List<MainData> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class MainData {
     MainData({

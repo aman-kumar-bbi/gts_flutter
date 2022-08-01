@@ -17,7 +17,8 @@ class _homeState extends State<home> {
 
     return Scaffold(
         body: FutureBuilder(
-          future: LocalStorage().passDataForUI(LocalStorage().readJson()),
+          // future: LocalStorage().passDataForUI(LocalStorage().readJson()),
+          future: LocalStorage().readJson() ,
           builder: (context, snapshot) {
             var dataFromFilter=snapshot.data;
 

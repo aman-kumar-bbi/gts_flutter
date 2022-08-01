@@ -14,17 +14,20 @@ class customButton extends StatelessWidget {
    Padding(
       padding: const EdgeInsets.only(bottom: 8.0, left: 8),
       child: Container(
-          width: 60,
-          child: TextButton(
-              onPressed: () {
-                 Stream<dynamic>?  myStream=cancelbroadcastList();
-                FocusScope.of(context).requestFocus(new FocusNode());
-                searchFeildController.clear();
-              },
-              child: Text(
-                "Cancel",
-                style: TextStyle(color: Colors.black),
-              ))),
+        // color: Colors.pink,
+        width: 60 ,
+          child: Center(
+            child: TextButton(
+                onPressed: () {
+                   Stream<dynamic>?  myStream=cancelbroadcastList();
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  searchFeildController.clear();
+                },
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.black),
+                )),
+          )),
     );
   
 

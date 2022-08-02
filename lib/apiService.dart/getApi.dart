@@ -9,85 +9,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiServices {
   bool? boolValue;
   List apiData = [];
+  bool? oneTimeOnly;
   Future<List<dynamic>> getAllData() async {
-
-    if (getBoolFromPreferenceForOneTime()==null) {
+    if (await getBoolFromPreferenceForFirstTime() == null) {
       onlyReadJson();
+      await setBoolInPreferenceForOneTimeOnly();
       if (await checkInternet()) {
-      const url =
-          "https://s3.amazonaws.com/bb.english.applications/APP-SERVER-UPDATE-TRAINING/ASHISH/build_training/gts.json";
-      try {
-        final response = await http.get(Uri.parse(url));
-        if (response.statusCode == 200) {
-          apiData = json.decode(response.body);
-          // SharedPreferences _prefs = await SharedPreferences.getInstance();
-          // await _prefs.setBool("jsonDb", true);
-          UpdateBoolInPreference();
-          UpdateDataBase(apiData);
-          return apiData;
-        } else {
-          print("Something Went Wrong");
-          return [];
-        }
-      } catch (e) {
-        print(e);
-        return [];
+        return tryFunction();
+      } else {
+        return GetOfflineJson();
       }
     } else {
-      return GetOfflineJson();
-    }
-    }else {
-       if (await checkInternet()) {
-      const url =
-          "https://s3.amazonaws.com/bb.english.applications/APP-SERVER-UPDATE-TRAINING/ASHISH/build_training/gts.json";
-      try {
-        final response = await http.get(Uri.parse(url));
-        if (response.statusCode == 200) {
-          apiData = json.decode(response.body);
-          // SharedPreferences _prefs = await SharedPreferences.getInstance();
-          // await _prefs.setBool("jsonDb", true);
-          UpdateBoolInPreference();
-          UpdateDataBase(apiData);
-          return apiData;
-        } else {
-          print("Something Went Wrong");
-          return [];
-        }
-      } catch (e) {
-        print(e);
-        return [];
-      }
-    } else {
-      // omline if data
-      final prefs = await SharedPreferences.getInstance();
-      final showonlineData = prefs.getBool("jsonDb");
-      print("showonlineData $showonlineData");
-      if (showonlineData == false) {
-        var returnJSON = await onlyReadJson();
-        return returnJSON;
+      if (await checkInternet()) {
+        return tryFunction();
       } else {
         return getUpdatedData();
       }
     }
-    }
-
-
-
-    
   }
 
   Future<bool> checkInternet() async {
     return await InternetConnectionChecker().hasConnection;
   }
 
-  Future<List<dynamic>> onlyReadJson() async {
+  onlyReadJson() async {
     var box = Hive.box("dataFromJson");
     final String response = await rootBundle.loadString('assets/gts.json');
     var offlinedata = await json.decode(response);
     box.put('hardCodedJsonData', offlinedata);
-    var box2 = Hive.box("dataFromJson");
-    var jsonData = box2.get('hardCodedJsonData');
-    return jsonData;
   }
 
   Future<List<dynamic>> GetOfflineJson() async {
@@ -95,7 +44,6 @@ class ApiServices {
     var jsonData = box.get('hardCodedJsonData');
     return jsonData;
   }
-
 
   UpdateDataBase(var ApiData) async {
     var box = Hive.box("dataFromJson");
@@ -105,7 +53,6 @@ class ApiServices {
   }
 
   List<dynamic> getUpdatedData() {
-    print("error ${getBoolFromPreferenceForOneTime}");
     var box = Hive.box("dataFromJson");
     var jsonData = box.get('hardCodedJsonData');
     return jsonData;
@@ -119,7 +66,7 @@ class ApiServices {
   Future<bool?> getBoolFromPreference() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     boolValue = _prefs.getBool("jsonDb");
-    print("value 3 $boolValue");
+    
     return boolValue;
   }
 
@@ -128,16 +75,38 @@ class ApiServices {
     await _prefs.setBool("jsonDb", true);
   }
 
-    void setBoolInPreferenceForOneTimeOnly() async {
+  Future<void> setBoolInPreferenceForOneTimeOnly() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    await _prefs.setBool("checkForOneTimeOnly", false);
-  }
-  Future<bool?> getBoolFromPreferenceForOneTime() async {
-    print("aman kumar");
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    boolValue = _prefs.getBool("jsonDb");
-    print("value 4 $boolValue");
-    return boolValue;
+    await _prefs
+        .setBool("checkForOneTimeOnly", false)
+        ;
   }
 
+  Future<bool?> getBoolFromPreferenceForFirstTime() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    oneTimeOnly = _prefs.getBool("checkForOneTimeOnly");
+    return oneTimeOnly;
+  }
+
+  Future<List<dynamic>> tryFunction() async {
+    try {
+      const url =
+          "https://s3.amazonaws.com/bb.english.applications/APP-SERVER-UPDATE-TRAINING/ASHISH/build_training/gts.json";
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        apiData = json.decode(response.body);
+        // SharedPreferences _prefs = await SharedPreferences.getInstance();
+        // await _prefs.setBool("jsonDb", true);
+        UpdateBoolInPreference();
+        UpdateDataBase(apiData);
+        return apiData;
+      } else {
+        print("Something Went Wrong");
+        return [];
+      }
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 }

@@ -10,14 +10,15 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
-  bool hasInternet = false;
-  List wholeList = [];
-  bool isLoader = true;
-  TextEditingController searchFeildController = TextEditingController();
-  var box = Hive.box("dataFromJson");
+  String getDeviceType() {
+    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    print("type ${data.size.shortestSide < 600 ? 'phone' :'tablet'}");
+    return data.size.shortestSide < 600 ? 'phone' :'tablet';
+  }
+  late String MobileOrTable;
   @override
   Widget build(BuildContext context) {
-
+    MobileOrTable=getDeviceType();
     return Scaffold(
         body: FutureBuilder(
       future:ApiServices().getAllData(),
@@ -25,7 +26,7 @@ class _homeState extends State<home> {
         var dataFromFilter = snapshot.data;
         if (snapshot.connectionState == ConnectionState.done) {
           return IfJsonHaveData(
-              DataAfterFutureBuilder: dataFromFilter as List<dynamic>);
+              DataAfterFutureBuilder: dataFromFilter as List<dynamic>,deviceType: MobileOrTable,);
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else {

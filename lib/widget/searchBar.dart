@@ -13,10 +13,13 @@ import '../providers/SearchListProvider.dart';
 class SearchBar extends StatefulWidget {
   final searchFeildController;
   final List<dynamic> wholeListFromJson;
+   String deviceType;
   SearchBar(
       {Key? key,
       required this.searchFeildController,
-      required this.wholeListFromJson})
+      required this.wholeListFromJson,
+      required this.deviceType
+      })
       : super(key: key);
 
   @override
@@ -31,28 +34,28 @@ class _SearchBarState extends State<SearchBar> {
   Map<String, dynamic> ListForSearch = {};
   Widget build(BuildContext context) {
   List idList=widget.wholeListFromJson;
-
-    
+  var localVariableForDeviceCheck=widget.deviceType;
+  double widthForContainer;
+    localVariableForDeviceCheck=="tablet"?widthForContainer=700:widthForContainer=300;
     return ChangeNotifierProvider(
       create: (context) => searchList(idList: idList,wholeListFromJson: widget.wholeListFromJson),
       child: Padding(
         padding: const EdgeInsets.only(left: 8.0, bottom: 8),
-        child: Container(
-            width: 300,
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: 50,
-                  child: Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                ),
-                Container(
-                  width: 200,
+        child: wholeContainerWhichContainBoxAndIcon(localVariableForDeviceCheck, idList,widthForContainer)
+      ),
+    );
+  }
+  broadcastList(){
+     return myStreamController.sink.add(staticValue.searchedList);
+  }
+  cancelbroadcastList(){
+    return myStreamController.sink.add(widget.wholeListFromJson);
+  }
+
+  Widget searchBarWhiteBox(double Customwidth,List idList){
+    return Container(
+                  
+                  width: Customwidth,
                   child: TextFormField(
                      cursorColor: Colors.black,
     
@@ -71,7 +74,26 @@ class _SearchBarState extends State<SearchBar> {
                         
                         border: InputBorder.none,
                       )),
+                );
+  }
+
+  Widget wholeContainerWhichContainBoxAndIcon(var localVariableForDeviceCheck ,List idList,double widthForThisContainerOnly){
+    return Container(
+           
+            width: widthForThisContainerOnly,
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 50,
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
                 ),
+               localVariableForDeviceCheck=="tablet"?searchBarWhiteBox(600, idList):searchBarWhiteBox(200, idList),
                 Container(
                   width: 50,
                   child: IconButton(
@@ -88,17 +110,8 @@ class _SearchBarState extends State<SearchBar> {
                       )),
                 ) 
               ],
-            )),
-      ),
-    );
+            ));
   }
-  broadcastList(){
-     return myStreamController.sink.add(staticValue.searchedList);
-  }
-  cancelbroadcastList(){
-    return myStreamController.sink.add(widget.wholeListFromJson);
-  }
-
 
   }
 

@@ -7,7 +7,8 @@ import 'package:flutter/foundation.dart';
 class filterScreen extends StatefulWidget {
   // const filterScreen({Key? key}) : super(key: key);
   var wholeListFromJson;
-  filterScreen({this.wholeListFromJson});
+    final String deviceType;
+  filterScreen({this.wholeListFromJson,required this.deviceType});
 
   @override
   State<filterScreen> createState() => _filterScreenState();
@@ -36,7 +37,7 @@ class _filterScreenState extends State<filterScreen> {
       }
     }
     checkBoxList = checkBoxList.toSet().toList();
-    print("checkBoxList $checkBoxList");
+    
 
     typeMap = {for (var item in checkBoxList) '$item': false};
     return typeMap;
@@ -56,7 +57,7 @@ class _filterScreenState extends State<filterScreen> {
     List list1 = [];
 
     return Scaffold(
-        appBar: Constant().customAppBar("Filter", false, null),
+        appBar: Constant().customAppBar("Filter", false, null,widget.deviceType),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -87,7 +88,7 @@ class _filterScreenState extends State<filterScreen> {
                       onChanged: (value) {
                         setState(() {
                           isSwitched = value;
-                          print(isSwitched);
+                         
                         });
                       },
                     ),
@@ -141,6 +142,7 @@ class _filterScreenState extends State<filterScreen> {
                                         IfJsonHaveData(
                                           DataAfterFutureBuilder: outputList,
                                           isfiltered: false,
+                                          deviceType: widget.deviceType,
                                         ),
                                       )
                                     : OrFunctionOnApplyButton(list1);
@@ -148,9 +150,10 @@ class _filterScreenState extends State<filterScreen> {
                                   IfJsonHaveData(
                                     DataAfterFutureBuilder: OrItemsList,
                                     isfiltered: false,
+                                    deviceType: widget.deviceType,
                                   ),
                                 );
-                                print("tesing list1 ${list1}");
+                                
                                 setState(() {
                                   testItem = [];
                                   OrItemsList = [];
@@ -232,13 +235,13 @@ class _filterScreenState extends State<filterScreen> {
         testItem.addAll({typeMap.keys.elementAt(i)});
       }
     }
-    print("typeMap testing $typeMap");
+    
   }
 
   OrFunctionOnApplyButton(List list1) {
     for (var i = 0; i < widget.wholeListFromJson.length; i++) {
       for (var p = 0; p < widget.wholeListFromJson[i]["type"].length; p++) {
-        print(" each list ${widget.wholeListFromJson[i]["type"]}");
+        
         if (list1.contains(widget.wholeListFromJson[i]["type"][p])) {
           OrItemsList.add(widget.wholeListFromJson[i]);
           break;

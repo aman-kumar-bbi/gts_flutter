@@ -1,3 +1,4 @@
+import 'package:database_json/apiService.dart/getApi.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
@@ -11,7 +12,8 @@ import 'package:intl/intl.dart';
 class IfJsonHaveData extends StatefulWidget {
   List<dynamic> DataAfterFutureBuilder;
   bool? isfiltered;
-  IfJsonHaveData({required this.DataAfterFutureBuilder, this.isfiltered});
+  final String deviceType;
+  IfJsonHaveData({required this.DataAfterFutureBuilder, this.isfiltered,required this.deviceType});
 
   @override
   static ValueNotifier entervalue = ValueNotifier('');
@@ -41,280 +43,283 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: Constant().customAppBar(
-          "Search", widget.isfiltered ?? true, widget.DataAfterFutureBuilder),
+          "Search", widget.isfiltered ?? true, widget.DataAfterFutureBuilder,widget.deviceType),
       body: widget.DataAfterFutureBuilder.isEmpty
           ? const Center(
               child: Text("No item found"),
             )
-          : Column(
-              children: [
-                Container(
-                  color: Colors.grey[300],
-                  height: height * 0.065,
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      SearchBar(
-                        searchFeildController: searchFeildController,
-                        wholeListFromJson: widget.DataAfterFutureBuilder,
-                      ),
-                      customButton(
-                        searchFeildController: searchFeildController,
-                        wholeListFromJson: widget.DataAfterFutureBuilder,
-                      ),
-                    ],
+          : SingleChildScrollView(
+            child: Column(
+                children: [
+                  Container(
+                    color: Colors.grey[300],
+                    height: height * 0.065,
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SearchBar(
+                          searchFeildController: searchFeildController,
+                          wholeListFromJson: widget.DataAfterFutureBuilder,
+                          deviceType: widget.deviceType,
+                        ),
+                        customButton(
+                          searchFeildController: searchFeildController,
+                          wholeListFromJson: widget.DataAfterFutureBuilder,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                // Stream
-                StreamBuilder(
-                  initialData: staticValue.searchedList,
-                  stream: myStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List thisIsMainData = snapshot.data as List;
-                      // listwithTimeStamp=thisIsMainData;
-                      listwithTimeStamp = thisIsMainData.where((element) {
-                        return element['timestamp'] != null;
-                      }).toList();
-                      listWithoutTimeStamp = thisIsMainData.where((element) {
-                        return element['timestamp'] == null;
-                      }).toList();
-                      SumOfBothList = listwithTimeStamp + listWithoutTimeStamp;
-                      return SingleChildScrollView(
-                        child: SizedBox(
-                            height: height - 161,
-                            width: double.infinity,
-                            child: ListView.builder(
-                              itemCount: SumOfBothList.length,
-                              itemBuilder: ((context, index) {
-                                return SumOfBothList[index]['timestamp'] != null
-                                    ? ClipRect(
-                                        child: Banner(
-                                            message: "New",
-                                            location: BannerLocation.topEnd,
-                                            child: GestureDetector(
-                                              onTap: (() {
-                                                print("button pressed");
-                                                setState(() {
-                                                  SumOfBothList[index]
-                                                      .removeWhere((key,
-                                                              value) =>
-                                                          key == "timestamp");
-                                                });
-                                                
-                                              }),
-                                              child: Column(
-                                                children: [
-                                                  FocusedMenuHolder(
-                                                    menuItems: [
-                                                      FocusedMenuItem(
-                                                          title: const Text("Share"),
-                                                          onPressed: () async {
-                                                            await Share.share(
-                                                                "title: ${SumOfBothList[index]['chapterName']},page: ${SumOfBothList[index]['page']},date: ${df.format(DateTime.fromMillisecondsSinceEpoch(timeStampInMilli * 1000))}");
-                                                          },
-                                                          trailingIcon:
-                                                              const Icon(
-                                                            Icons.share,
-                                                            color: Colors.grey,
-                                                          )),
-                                                      FocusedMenuItem(
-                                                          title:
-                                                             const Text("BookMark"),
-                                                          onPressed: () {
-                                                            List testing =
-                                                                SumOfBothList[
-                                                                        index]
-                                                                    ['type'];
-                                                            testing.add(
-                                                                "bookmark");
-                                                            setState(() {
-                                                              SumOfBothList[
+                  // Stream
+                  StreamBuilder(
+                    initialData: staticValue.searchedList,
+                    stream: myStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List thisIsMainData = snapshot.data as List;
+                        // listwithTimeStamp=thisIsMainData;
+                        listwithTimeStamp = thisIsMainData.where((element) {
+                          return element['timestamp'] != null;
+                        }).toList();
+                        listWithoutTimeStamp = thisIsMainData.where((element) {
+                          return element['timestamp'] == null;
+                        }).toList();
+                        SumOfBothList = listwithTimeStamp + listWithoutTimeStamp;
+                        return SingleChildScrollView(
+                          child: SizedBox(
+                              height: height -161,
+                              width: double.infinity,
+                              child: ListView.builder(
+                                itemCount: SumOfBothList.length,
+                                itemBuilder: ((context, index) {
+                                  return SumOfBothList[index]['timestamp'] != null
+                                      ? ClipRect(
+                                          child: Banner(
+                                              message: "New",
+                                              location: BannerLocation.topEnd,
+                                              child: GestureDetector(
+                                                onTap: (() {
+                                                  
+                                                  setState(() {
+                                                    SumOfBothList[index]
+                                                        .removeWhere((key,
+                                                                value) =>
+                                                            key == "timestamp");
+                                                  });
+                                                  
+                                                }),
+                                                child: Column(
+                                                  children: [
+                                                    FocusedMenuHolder(
+                                                      menuItems: [
+                                                        FocusedMenuItem(
+                                                            title: const Text("Share"),
+                                                            onPressed: () async {
+                                                              await Share.share(
+                                                                  "title: ${SumOfBothList[index]['chapterName']},page: ${SumOfBothList[index]['page']},date: ${df.format(DateTime.fromMillisecondsSinceEpoch(timeStampInMilli * 1000))}");
+                                                            },
+                                                            trailingIcon:
+                                                                const Icon(
+                                                              Icons.share,
+                                                              color: Colors.grey,
+                                                            )),
+                                                        FocusedMenuItem(
+                                                            title:
+                                                               const Text("BookMark"),
+                                                            onPressed: () {
+                                                              List testing =
+                                                                  SumOfBothList[
                                                                           index]
-                                                                      ['type'] =
-                                                                  testing;
-                                                            });
-                                                            print(
-                                                                "bookmark ${testing.contains("bookmark")}");
-                                                          },
-                                                          trailingIcon:
-                                                              const Icon(
-                                                            Icons.bookmark,
-                                                            color: Colors.grey,
-                                                          )),
-                                                      FocusedMenuItem(
-                                                          title: const Text(
-                                                              "Mark as read"),
-                                                          onPressed: () {
-                                                            markAsReadFunction(
+                                                                      ['type'];
+                                                              testing.add(
+                                                                  "bookmark");
+                                                              setState(() {
                                                                 SumOfBothList[
-                                                                    index]);
-                                                          },
-                                                          trailingIcon:
-                                                              const Icon(
-                                                            Icons
-                                                                .mark_as_unread,
-                                                            color: Colors.grey,
-                                                          )),
-                                                    ],
-                                                    onPressed: () {},
-                                                    child: ListTile(
-                                                        leading: SumOfBothList[
-                                                                        index]
-                                                                    ['type']
-                                                                .contains(
-                                                                    "bookmark")
-                                                            ? const Icon(
-                                                                Icons.bookmark,
-                                                                color:
-                                                                    Colors.blue,
-                                                              )
-                                                            : Icon(null),
-                                                        title:
-                                                            Transform.translate(
-                                                          offset:
-                                                              Offset(-20, 0),
-                                                          child: Text(
-                                                            "${SumOfBothList[index]['chapterName']}",
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                        subtitle:
-                                                            Transform.translate(
-                                                          offset:
-                                                             const Offset(-20, 0),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Column(
-                                                                children: [
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                          "${SumOfBothList[index]['page']}",
-                                                                          maxLines:
-                                                                              1,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis),
-                                                                    ],
-                                                                  ),
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        df.format(DateTime.fromMillisecondsSinceEpoch(timeStampInMilli *
-                                                                            1000)),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )),
-                                                  ),
-                                                  Container(
-                                                      height: 1,
-                                                      color: Colors.grey,
-                                                      width: width)
-                                                ],
-                                              ),
-                                            )),
-                                      )
-                                    : Column(
-                                        children: [
-                                          FocusedMenuHolder(
-                                            menuItems: [
-                                              FocusedMenuItem(
-                                                  title: Text("Share"),
-                                                  onPressed: () async {
-                                                    await Share.share(
-                                                        "title: ${SumOfBothList[index]['chapterName']},page: ${SumOfBothList[index]['page']}");
-                                                  },
-                                                  trailingIcon: const Icon(
-                                                    Icons.share,
-                                                    color: Colors.grey,
-                                                  )),
-                                              FocusedMenuItem(
-                                                  title: const Text("BookMark"),
-                                                  onPressed: () {
-                                                    List testing =
-                                                        SumOfBothList[index]
-                                                            ['type'];
-                                                    testing.add("bookmark");
-                                                    setState(() {
-                                                      SumOfBothList[index]
-                                                          ['type'] = testing;
-                                                    });
-                                                    
-                                                  },
-                                                  trailingIcon: const Icon(
-                                                      Icons.bookmark,
-                                                      color: Colors.grey))
-                                            ],
-                                            onPressed: () {},
-                                            child: ListTile(
-                                                leading: SumOfBothList[index]
-                                                            ['type']
-                                                        .contains("bookmark")
-                                                    ? const Icon(
-                                                        Icons.bookmark,
-                                                        color: Colors.blue,
-                                                      )
-                                                    : const Icon(
-                                                        null),
-                                                title: Transform.translate(
-                                                  offset:const Offset(-20, 0),
-                                                  child: Text(
-                                                    "${SumOfBothList[index]['chapterName']}",
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                                subtitle: Transform.translate(
-                                                  offset:const Offset(-20, 0),
-                                                  child: Row(
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                              "${SumOfBothList[index]['page']}",
+                                                                            index]
+                                                                        ['type'] =
+                                                                    testing;
+                                                              });
+                                                              ApiServices().UpdateDataBase(SumOfBothList);
+                                                            },
+                                                            trailingIcon:
+                                                                const Icon(
+                                                              Icons.bookmark,
+                                                              color: Colors.grey,
+                                                            )),
+                                                        FocusedMenuItem(
+                                                            title: const Text(
+                                                                "Mark as read"),
+                                                            onPressed: () {
+                                                              markAsReadFunction(
+                                                                  SumOfBothList[
+                                                                      index]);
+                                                            },
+                                                            trailingIcon:
+                                                                const Icon(
+                                                              Icons
+                                                                  .mark_as_unread,
+                                                              color: Colors.grey,
+                                                            )),
+                                                      ],
+                                                      onPressed: () {},
+                                                      child: ListTile(
+                                                          leading: SumOfBothList[
+                                                                          index]
+                                                                      ['type']
+                                                                  .contains(
+                                                                      "bookmark")
+                                                              ? const Icon(
+                                                                  Icons.bookmark,
+                                                                  color:
+                                                                      Colors.blue,
+                                                                )
+                                                              : Icon(null),
+                                                          title:
+                                                              Transform.translate(
+                                                            offset:
+                                                                Offset(-20, 0),
+                                                            child: Text(
+                                                              "${SumOfBothList[index]['chapterName']}",
                                                               maxLines: 1,
                                                               overflow:
                                                                   TextOverflow
-                                                                      .ellipsis),
-                                                        ],
-                                                      ),
-                                                    ],
+                                                                      .ellipsis,
+                                                            ),
+                                                          ),
+                                                          subtitle:
+                                                              Transform.translate(
+                                                            offset:
+                                                               const Offset(-20, 0),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Column(
+                                                                  children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        Text(
+                                                                            "${SumOfBothList[index]['page']}",
+                                                                            maxLines:
+                                                                                1,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis),
+                                                                      ],
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Text(
+                                                                          df.format(DateTime.fromMillisecondsSinceEpoch(timeStampInMilli *
+                                                                              1000)),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )),
+                                                    ),
+                                                    Container(
+                                                        height: 1,
+                                                        color: Colors.grey,
+                                                        width: width)
+                                                  ],
+                                                ),
+                                              )),
+                                        )
+                                      : Column(
+                                          children: [
+                                            FocusedMenuHolder(
+                                              menuItems: [
+                                                FocusedMenuItem(
+                                                    title: Text("Share"),
+                                                    onPressed: () async {
+                                                      await Share.share(
+                                                          "title: ${SumOfBothList[index]['chapterName']},page: ${SumOfBothList[index]['page']}");
+                                                    },
+                                                    trailingIcon: const Icon(
+                                                      Icons.share,
+                                                      color: Colors.grey,
+                                                    )),
+                                                FocusedMenuItem(
+                                                    title: const Text("BookMark"),
+                                                    onPressed: () {
+                                                      List testing =
+                                                          SumOfBothList[index]
+                                                              ['type'];
+                                                      testing.add("bookmark");
+                                                      setState(() {
+                                                        SumOfBothList[index]
+                                                            ['type'] = testing;
+                                                      });
+                                                      
+                                                    },
+                                                    trailingIcon: const Icon(
+                                                        Icons.bookmark,
+                                                        color: Colors.grey))
+                                              ],
+                                              onPressed: () {},
+                                              child: ListTile(
+                                                  leading: SumOfBothList[index]
+                                                              ['type']
+                                                          .contains("bookmark")
+                                                      ? const Icon(
+                                                          Icons.bookmark,
+                                                          color: Colors.blue,
+                                                        )
+                                                      : const Icon(
+                                                          null),
+                                                  title: Transform.translate(
+                                                    offset:const Offset(-20, 0),
+                                                    child: Text(
+                                                      "${SumOfBothList[index]['chapterName']}",
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
                                                   ),
-                                                )),
-                                          ),
-                                          Container(
-                                              height: 1,
-                                              color: Colors.grey,
-                                              width: width)
-                                        ],
-                                      );
-                              }),
-                            )),
-                      );
-                    } else {
-                      return const Center(
-                        child: Text("Not Such Data"),
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
+                                                  subtitle: Transform.translate(
+                                                    offset:const Offset(-20, 0),
+                                                    child: Row(
+                                                      children: [
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                                "${SumOfBothList[index]['page']}",
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )),
+                                            ),
+                                            Container(
+                                                height: 1,
+                                                color: Colors.grey,
+                                                width: width)
+                                          ],
+                                        );
+                                }),
+                              )),
+                        );
+                      } else {
+                        return const Center(
+                          child: Text("Not Such Data"),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+          ),
     );
   }
 

@@ -8,7 +8,7 @@ class Constant {
   
  Color APP_BASIS_COLOR=Color(0xF4F4F4);
 
-AppBar customAppBar(String title,bool? ishowButton,var wholeListFromJson){
+AppBar customAppBar(String title,bool? ishowButton,var wholeListFromJson,String deviceType){
   return AppBar(
         title: Text(
           title,
@@ -21,7 +21,7 @@ AppBar customAppBar(String title,bool? ishowButton,var wholeListFromJson){
         
          actions: [
           ishowButton==true? IconButton(
-              onPressed: () =>Get.to(filterScreen(wholeListFromJson: wholeListFromJson,)),
+              onPressed: () =>Get.to(filterScreen(wholeListFromJson: wholeListFromJson,deviceType: deviceType,)),
               icon: Image.asset(
                 'assets/menuIcon.png',
               )):const SizedBox()

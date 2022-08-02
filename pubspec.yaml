@@ -43,6 +43,8 @@ dependencies:
   intl: ^0.17.0
   focused_menu: ^1.0.5
   share_plus: ^4.0.10
+  internet_connection_checker: ^0.0.1+4
+  shared_preferences: ^2.0.15
 
 
 dev_dependencies:

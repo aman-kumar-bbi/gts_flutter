@@ -58,6 +58,7 @@ class LocalStorage {
   passDataForUI(data){
     var NewData=ApiServices().getAllData();
     data= NewData;
+    print("lpl $data");
     // var decodeNewData=json.decode(NewData);
     return data;
   }

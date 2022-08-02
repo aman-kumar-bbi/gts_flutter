@@ -39,7 +39,6 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    print("appbar ${widget.isfiltered}");
     return Scaffold(
       appBar: Constant().customAppBar(
           "Search", widget.isfiltered ?? true, widget.DataAfterFutureBuilder),
@@ -102,14 +101,14 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                                                               value) =>
                                                           key == "timestamp");
                                                 });
-                                                print("function");
+                                                
                                               }),
                                               child: Column(
                                                 children: [
                                                   FocusedMenuHolder(
                                                     menuItems: [
                                                       FocusedMenuItem(
-                                                          title: Text("Share"),
+                                                          title: const Text("Share"),
                                                           onPressed: () async {
                                                             await Share.share(
                                                                 "title: ${SumOfBothList[index]['chapterName']},page: ${SumOfBothList[index]['page']},date: ${df.format(DateTime.fromMillisecondsSinceEpoch(timeStampInMilli * 1000))}");
@@ -121,7 +120,7 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                                                           )),
                                                       FocusedMenuItem(
                                                           title:
-                                                              Text("BookMark"),
+                                                             const Text("BookMark"),
                                                           onPressed: () {
                                                             List testing =
                                                                 SumOfBothList[
@@ -165,26 +164,34 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                                                                     ['type']
                                                                 .contains(
                                                                     "bookmark")
-                                                            ? Icon(
+                                                            ? const Icon(
                                                                 Icons.bookmark,
                                                                 color:
                                                                     Colors.blue,
                                                               )
-                                                            : Icon(Icons
-                                                                .bookmark_border),
-                                                        title: Text(
-                                                          "${SumOfBothList[index]['chapterName']}",
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
+                                                            : Icon(null),
+                                                        title:
+                                                            Transform.translate(
+                                                          offset:
+                                                              Offset(-20, 0),
+                                                          child: Text(
+                                                            "${SumOfBothList[index]['chapterName']}",
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
                                                         ),
-                                                        subtitle: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Container(
-                                                              child: Column(
+                                                        subtitle:
+                                                            Transform.translate(
+                                                          offset:
+                                                             const Offset(-20, 0),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Column(
                                                                 children: [
                                                                   Row(
                                                                     children: [
@@ -206,8 +213,8 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                                                                   ),
                                                                 ],
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         )),
                                                   ),
                                                   Container(
@@ -233,7 +240,7 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                                                     color: Colors.grey,
                                                   )),
                                               FocusedMenuItem(
-                                                  title: Text("BookMark"),
+                                                  title: const Text("BookMark"),
                                                   onPressed: () {
                                                     List testing =
                                                         SumOfBothList[index]
@@ -243,7 +250,7 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                                                       SumOfBothList[index]
                                                           ['type'] = testing;
                                                     });
-                                                    print("bookmark $testing");
+                                                    
                                                   },
                                                   trailingIcon: const Icon(
                                                       Icons.bookmark,
@@ -254,34 +261,40 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                                                 leading: SumOfBothList[index]
                                                             ['type']
                                                         .contains("bookmark")
-                                                    ? Icon(
+                                                    ? const Icon(
                                                         Icons.bookmark,
                                                         color: Colors.blue,
                                                       )
-                                                    : Icon(
-                                                        Icons.bookmark_border),
-                                                title: Text(
-                                                  "${SumOfBothList[index]['chapterName']}",
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                    : const Icon(
+                                                        null),
+                                                title: Transform.translate(
+                                                  offset:const Offset(-20, 0),
+                                                  child: Text(
+                                                    "${SumOfBothList[index]['chapterName']}",
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                 ),
-                                                subtitle: Row(
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                            "${SumOfBothList[index]['page']}",
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                subtitle: Transform.translate(
+                                                  offset:const Offset(-20, 0),
+                                                  child: Row(
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              "${SumOfBothList[index]['page']}",
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 )),
                                           ),
                                           Container(

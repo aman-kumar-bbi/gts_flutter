@@ -11,14 +11,15 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
   Directory directory = await getApplicationDocumentsDirectory();
-  await Hive.initFlutter();
+  await Hive.initFlutter(directory.path);
+  await Hive.openBox('dataFromJson');
   MultiProvider(providers: [
     ChangeNotifierProvider(create: (_)=>searchList())
   ]);
   runApp(MyApp());
 }
+
 
 class MyApp extends StatefulWidget {
   @override

@@ -1,4 +1,3 @@
-import 'package:database_json/apiService.dart/getApi.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
@@ -12,7 +11,7 @@ import 'package:intl/intl.dart';
 class IfJsonHaveData extends StatefulWidget {
   List<dynamic> DataAfterFutureBuilder;
   bool? isfiltered;
-  final String deviceType;
+  String deviceType;
   IfJsonHaveData({required this.DataAfterFutureBuilder, this.isfiltered,required this.deviceType});
 
   @override
@@ -56,7 +55,7 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                     height: height * 0.065,
                     width: double.infinity,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SearchBar(
                           searchFeildController: searchFeildController,
@@ -87,7 +86,7 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                         SumOfBothList = listwithTimeStamp + listWithoutTimeStamp;
                         return SingleChildScrollView(
                           child: SizedBox(
-                              height: height -161,
+                              height: height - 161,
                               width: double.infinity,
                               child: ListView.builder(
                                 itemCount: SumOfBothList.length,
@@ -99,7 +98,7 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                                               location: BannerLocation.topEnd,
                                               child: GestureDetector(
                                                 onTap: (() {
-                                                  
+                                                  print("button pressed");
                                                   setState(() {
                                                     SumOfBothList[index]
                                                         .removeWhere((key,
@@ -139,7 +138,8 @@ class _IfJsonHaveDataState extends State<IfJsonHaveData> {
                                                                         ['type'] =
                                                                     testing;
                                                               });
-                                                              ApiServices().UpdateDataBase(SumOfBothList);
+                                                              print(
+                                                                  "bookmark ${testing.contains("bookmark")}");
                                                             },
                                                             trailingIcon:
                                                                 const Icon(

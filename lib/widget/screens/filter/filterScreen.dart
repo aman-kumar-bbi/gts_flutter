@@ -8,6 +8,7 @@ class filterScreen extends StatefulWidget {
   // const filterScreen({Key? key}) : super(key: key);
   var wholeListFromJson;
     final String deviceType;
+    // final String deviceOrientation;
   filterScreen({this.wholeListFromJson,required this.deviceType});
 
   @override
@@ -143,6 +144,7 @@ class _filterScreenState extends State<filterScreen> {
                                           DataAfterFutureBuilder: outputList,
                                           isfiltered: false,
                                           deviceType: widget.deviceType,
+                                          // deviceOrientation: widget.deviceOrientation,
                                         ),
                                       )
                                     : OrFunctionOnApplyButton(list1);
@@ -151,6 +153,7 @@ class _filterScreenState extends State<filterScreen> {
                                     DataAfterFutureBuilder: OrItemsList,
                                     isfiltered: false,
                                     deviceType: widget.deviceType,
+                                    // deviceOrientation: widget.deviceOrientation,
                                   ),
                                 );
                                 

@@ -13,12 +13,12 @@ import '../providers/SearchListProvider.dart';
 class SearchBar extends StatefulWidget {
   final searchFeildController;
   final List<dynamic> wholeListFromJson;
-   String deviceType;
+  String deviceType;
   SearchBar(
       {Key? key,
       required this.searchFeildController,
       required this.wholeListFromJson,
-      required this.deviceType
+      required this.deviceType,
       })
       : super(key: key);
 
@@ -28,21 +28,37 @@ class SearchBar extends StatefulWidget {
 
 late StreamController myStreamController=StreamController();
 late Stream myStream = myStreamController.stream.asBroadcastStream(); 
-
+  double customWidth=200;
+    double customWithForSearchBox=200;
 class _SearchBarState extends State<SearchBar> {
   @override
   Map<String, dynamic> ListForSearch = {};
   Widget build(BuildContext context) {
   List idList=widget.wholeListFromJson;
-  var localVariableForDeviceCheck=widget.deviceType;
-  double widthForContainer;
-    localVariableForDeviceCheck=="tablet"?widthForContainer=700:widthForContainer=300;
-    return ChangeNotifierProvider(
-      create: (context) => searchList(idList: idList,wholeListFromJson: widget.wholeListFromJson),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8.0, bottom: 8),
-        child: wholeContainerWhichContainBoxAndIcon(localVariableForDeviceCheck, idList,widthForContainer)
-      ),
+
+  
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        print("orientation $orientation");
+        if (orientation==Orientation.portrait) {
+          return ChangeNotifierProvider(
+        create: (context) => searchList(idList: idList,wholeListFromJson: widget.wholeListFromJson),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, bottom: 8),
+          child:wholeContainerConatinWhiteBox(idList,customWidth,customWithForSearchBox,true)
+        ),
+      );
+        }else {
+          return ChangeNotifierProvider(
+        create: (context) => searchList(idList: idList,wholeListFromJson: widget.wholeListFromJson),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, bottom: 8),
+          child:wholeContainerConatinWhiteBox(idList,customWidth,customWithForSearchBox,false)
+        ),
+      );
+        }
+      },
+
     );
   }
   broadcastList(){
@@ -51,36 +67,32 @@ class _SearchBarState extends State<SearchBar> {
   cancelbroadcastList(){
     return myStreamController.sink.add(widget.wholeListFromJson);
   }
+  // checkPhoneOrtablet(){
+  //   if (widget.deviceType=="phone") {
+  //   customWidth=300;
+  //   customWithForSearchBox=200;
+  // }else{
+  //   customWidth=700;
+  //   customWithForSearchBox=600;
+  // }
+  // }
 
-  Widget searchBarWhiteBox(double Customwidth,List idList){
-    return Container(
-                  
-                  width: Customwidth,
-                  child: TextFormField(
-                     cursorColor: Colors.black,
-    
-                      onChanged: (value) {
-                       
-                        setState(() {
-                          
-                        staticValue.searchedList = Provider.of<searchList>(context, listen: false).searchFunction(value,idList,widget.wholeListFromJson);
-                         
-                        });
-                         Stream<dynamic>? myStream=broadcastList() ;
-                      },
-                      
-                      controller: widget.searchFeildController,
-                      decoration: const InputDecoration(
-                        
-                        border: InputBorder.none,
-                      )),
-                );
+
+Widget wholeContainerConatinWhiteBox(List idList,double customWidth,double customWithForSearchBox,bool isLandscape){
+  print("islandscape bool $isLandscape");
+  if (isLandscape==false) {
+    customWidth=1200;
+  }else{
+     if (widget.deviceType=="phone") {
+    customWidth=300;
+    customWithForSearchBox=200;
+  }else{
+    customWidth=700;
+    customWithForSearchBox=600;
   }
-
-  Widget wholeContainerWhichContainBoxAndIcon(var localVariableForDeviceCheck ,List idList,double widthForThisContainerOnly){
-    return Container(
-           
-            width: widthForThisContainerOnly,
+  }
+  return Container(
+            width: customWidth,
             decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -93,7 +105,7 @@ class _SearchBarState extends State<SearchBar> {
                     color: Colors.grey,
                   ),
                 ),
-               localVariableForDeviceCheck=="tablet"?searchBarWhiteBox(600, idList):searchBarWhiteBox(200, idList),
+                // whiteSearchBox(idList,customWithForSearchBox,isLandscape),
                 Container(
                   width: 50,
                   child: IconButton(
@@ -111,10 +123,47 @@ class _SearchBarState extends State<SearchBar> {
                 ) 
               ],
             ));
+}
+
+  Widget whiteSearchBox(List idList,double customWithForSearchBox,isLandscape){
+    // isLandscape==true?customWithForSearchBox=1100:customWithForSearchBox=200;
+    if (isLandscape==false) {
+    customWidth=1200;
+  }else{
+     if (widget.deviceType=="phone") {
+    customWidth=300;
+    customWithForSearchBox=200;
+  }else{
+    customWidth=700;
+    customWithForSearchBox=600;
+  }
+  }
+    return Container(
+                  width: customWithForSearchBox,
+                  child: TextFormField(
+                     cursorColor: Colors.black,
+    
+                      onChanged: (value) {
+
+                        setState(() {
+                          
+                        staticValue.searchedList = Provider.of<searchList>(context, listen: false).searchFunction(value,idList,widget.wholeListFromJson);
+                        });
+                         Stream<dynamic>? myStream=broadcastList() ;
+                      },
+                      
+                      controller: widget.searchFeildController,
+                      decoration: const InputDecoration(
+                        
+                        border: InputBorder.none,
+                      )),
+                );
   }
 
-  }
 
+
+
+  }
 
 
 

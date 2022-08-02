@@ -126,7 +126,6 @@ Widget wholeContainerConatinWhiteBox(List idList,double customWidth,double custo
 }
 
   Widget whiteSearchBox(List idList,double customWithForSearchBox,isLandscape){
-    // isLandscape==true?customWithForSearchBox=1100:customWithForSearchBox=200;
     if (isLandscape==false) {
     customWidth=1200;
   }else{
@@ -159,10 +158,6 @@ Widget wholeContainerConatinWhiteBox(List idList,double customWidth,double custo
                       )),
                 );
   }
-
-
-
-
   }
 
 
